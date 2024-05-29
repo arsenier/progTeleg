@@ -129,11 +129,11 @@ ERROR_TYPE Motor::update()
 
     float feedbackU = usePIDFlag ? piReg.tick(goalSpeed - realSpeed) : 0;
 
-    Serial.println(""
-        LOG("speed", realSpeed)
-        LOG("feedforw U", feedforwardU)
-        LOG("feedback U", feedbackU)
-    );
+    // Serial.println(""
+    //     LOG("speed", realSpeed)
+    //     LOG("feedforw U", feedforwardU)
+    //     LOG("feedback U", feedbackU)
+    // );
 
     applyU(feedforwardU + feedbackU);
 

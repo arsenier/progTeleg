@@ -50,8 +50,8 @@ ISR(PCINT0_vect){motor2.interruptHandler();}    // Port B, PCINT0 - PCINT7
 uint32_t tmr1 = 0; // таймер
 uint32_t tmr2 = 0; // 2 таймер
 int grey = 165; // усл значение серого
-int v_f = 65; // скорость вперёд
-float Kp = 1; // коэффициент пропорцианального регулятора
+int v_f = 4; // скорость вперёд
+float Kp = 0.03; // коэффициент пропорцианального регулятора
 int prkt = 0; // счётчик перекрёстков 
 bool is_black = false; // видит ли чёрный цвет датчик
 bool is_blackOld = false; // видел ли датчик чёрный цвет в предыдущей итерации
@@ -64,13 +64,13 @@ int perkt_sens;
 int perkt_sensOld;
 
 uint32_t dt = 0;
-float S1;
-float S2;
+float S_L;
+float S_R;
 float err;
 float up;
-int u;
-int v_L;
-int v_R;
+float u;
+float v_L;
+float v_R;
 
 void setup()
 {
@@ -138,9 +138,9 @@ void loop()
   tmr1 = micros();
 
   // чтение датчика
-  // S1 = ; // перекрёстки
-  // S2 = ; // линия
-  perkt_sens = digitalRead(A3);
+  S_L = analogRead(S_LEFT); // перекрёстки
+  S_R = analogRead(S_RIGHT); // линия
+  // perkt_sens = digitalRead(A3);
 
   switch (state) {
     case initialization:
@@ -148,7 +148,7 @@ void loop()
       break;
     case line:
       // п+ регулятор
-      err = S1 - S2 + 11;
+      err = S_L - S_R;
       
       up = Kp * err;
       u = up;
@@ -181,25 +181,25 @@ void loop()
       break;
   }
   // выдача управляющих воздействий
-  drive(4, 4);
+  drive(v_L, v_R);
 
   // Логи
   Serial.println(
-    "dt: " + String(dt)
+    "dt: " + String(dt) +
     // LOG("motor1 angle", motor1.getAngle())
 
-    // " S1: " + String(S1) +
+    " S_L: " + String(S_L) +
+    " S_R: " + String(S_R) +
     // " state: " + String(state) +
     // " prkt: " + String(prkt) +
     // " perkt_sens: " + String(perkt_sens) +
-    // " S2: " + String(S2) +
     // " err: " + String(err) +
     // " u: " + String(u) +
     // " v_L: " + String(v_L) +
     // " is_blackOld: " + String(is_blackOld) +
     // " is_black: " + String(is_black) +
     // " v_R: " + String(v_R)
-    );
+    "");
   is_blackOld = is_black;
   perkt_sensOld = perkt_sens;
 }
