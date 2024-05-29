@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:uno",
+    "sketch": "progTeleg.ino",
+    "port": "/dev/ttyUSB0"
+}
