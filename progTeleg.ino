@@ -1,5 +1,4 @@
 #include <Wire.h>
-#include "BH1750FVI.h"
 #include <Arduino.h>
 #include "ConnectionList.h"
 #include "Defines.h"
@@ -73,9 +72,6 @@ int u;
 int v_L;
 int v_R;
 
-BH1750FVI s1(BH1750_SECOND_I2CADDR, BH1750_CONTINUOUS_LOW_RES_MODE, BH1750_SENSITIVITY_MIN, BH1750_ACCURACY_MIN);  // обьявление датчика S1
-BH1750FVI s2(BH1750_DEFAULT_I2CADDR, BH1750_CONTINUOUS_LOW_RES_MODE, BH1750_SENSITIVITY_MIN, BH1750_ACCURACY_MIN); // обьявление датчика S2
-
 void setup()
 {
   Wire.begin(); // инициализация библиотеки Wire позволяющую использовать шину I2c
@@ -88,17 +84,6 @@ void setup()
 
   pinMode(S_LEFT, INPUT);
   pinMode(S_RIGHT, INPUT);
-
-  s1.begin(); // инициализируем датчик S1
-  s2.begin(); // инициализируем датчик S1
-
-  s1.setCalibration(1.06);                           //call before "readLightLevel()", 1.06=white LED & artifical sun
-  s1.setSensitivity(1.00);                           //call before "readLightLevel()", 1.00=no optical filter in front of the sensor
-  s1.setResolution(BH1750_ONE_TIME_LOW_RES_MODE);
-
-  s2.setCalibration(1.06);                           //call before "readLightLevel()", 1.06=white LED & artifical sun
-  s2.setSensitivity(1.00);                           //call before "readLightLevel()", 1.00=no optical filter in front of the sensor
-  s2.setResolution(BH1750_ONE_TIME_LOW_RES_MODE);
 
   // Det timer 2 divisor to  256 for PWM frequency of 122.070312500 Hz
   TCCR2B = TCCR2B & B11111000 | B00000110;
@@ -153,8 +138,8 @@ void loop()
   tmr1 = micros();
 
   // чтение датчика
-  // S1 = s1.readLightLevel(); // перекрёстки
-  // S2 = s2.readLightLevel(); // линия
+  // S1 = ; // перекрёстки
+  // S2 = ; // линия
   perkt_sens = digitalRead(A3);
 
   switch (state) {
